@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Home Page</title>
+    <!-- Links the app configuration settings -->
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none; /* Hidden by default, shows if installable */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to My Home Page</h1>
+    <p>Tap below to add this directly to your Galaxy home screen as an app.</p>
+    <button id="installBtn">Install App</button>
+</div>
+
+<script>
+    // Register the background Service Worker (required for Android installation)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log("Service Worker Registered"));
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    // Listen for the phone's built-in install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show our custom install button
+        installBtn.style.display = 'block';
+    });
+
+    // When the user clicks our button, trigger the Galaxy installation
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User installed the app');
+            }
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
+age.html
+age.html
