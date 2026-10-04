@@ -1,0 +1,5 @@
+// This tells Android the app can run offline or load instantly
+self.addEventListener('fetch', (event) => {
+    // Keeps the app installable without complex caching for now
+    event.respondWith(fetch(event.request));
+});
